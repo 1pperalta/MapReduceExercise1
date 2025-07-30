@@ -20,9 +20,10 @@ class WordCountMapReduce(SimpleMapReduce):
             last_name = columns[3].strip().lower()
             country = columns[6].strip().lower()
             print(f"{last_name}, {country}")
+            results.append(((last_name, country), 1))
         except Exception as e:
             print(f"Error processing CSV: {e}")
-        results.append(((last_name, country), 1))
+        
         return results
 
     def reduce_function(self, key: Tuple[str, str], values: List[int]) -> List[Tuple[Tuple[str, str], int]]:
@@ -33,7 +34,7 @@ class WordCountMapReduce(SimpleMapReduce):
 # Ejemplo de uso
 if __name__ == "__main__":
 
-    with open("customers-2000000.csv", "r", encoding="utf-8") as file:
+    with open("./data/custom.csv", "r", encoding="utf-8") as file:
         text = file.read()
 
 #Creando chunks
