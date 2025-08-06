@@ -32,9 +32,9 @@ class ThreadedWordCountMapReduce(MapReduceInterface):
             
             if len(columns) >= 7:
                 with self.lock:
-                    print(f"{columns[0]}: {columns[6].lower()}")
-                results.append((columns[6], 1))
-        
+                    print(f"{columns[0]}: {columns[6].lower()}: {columns[3].strip().lower()}")
+                results.append(((columns[6].lower(),columns[3].strip().lower()), 1))
+
         except (csv.Error, StopIteration) as e:
             with self.lock:
                 print(f"Error al leer la línea: {e}")
@@ -141,15 +141,28 @@ if __name__ == "__main__":
         
     print("EJEMPLO: Contador de Palabras con MapReduce usando Hilos")
     print("=" * 60)
+
     
     # Crear instancia usando todos los CPUs disponibles
     word_counter = ThreadedWordCountMapReduce()
     
     # Ejecutar MapReduce
     results = word_counter.execute(documents)
+
+    top_usa = [data for data in results if 'united states of america' in data[0][0]]
+    top_usa_sorted = sorted(top_usa, key=lambda x: x[1], reverse=True)[:10]
+
+    
     
     # Mostrar resultados finales
     print("\nRESULTADOS FINALES:")
     print("-" * 30)
     for word, count in sorted(results, key=lambda x: x[1], reverse=True):
+        print(f"{word}: {count}")
+
+
+
+    print("\nTOP 10 - 'United States of America':")
+    print("-" * 30)
+    for word, count in top_usa_sorted:
         print(f"{word}: {count}")
