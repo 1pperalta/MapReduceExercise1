@@ -3,3 +3,7 @@
 *.json
 .DS_Store
 __pycache__/
+*.custom.csv
+*data/custom.csv
+data/custom.csv
+
