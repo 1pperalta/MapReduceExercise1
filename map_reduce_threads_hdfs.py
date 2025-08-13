@@ -1,23 +1,20 @@
 from simple_map_reduce_hdfs import SimpleMapReduceHDFS
 from threaded_world_count_csv import ThreadedWordCountMapReduce
 
-
+#Trabajo de hilos con HDFS
 class HybridMapReduce(SimpleMapReduceHDFS):
     def __init__(self, num_threads=None):
         super().__init__()
         self.threaded_mapreduce = ThreadedWordCountMapReduce(num_threads=num_threads)
 
     def map_function(self, key, value):
-        # Usa la función map de la versión con hilos
         return self.threaded_mapreduce.map_function(key, value)
 
     def reduce_function(self, key, values):
-        # Cuenta ocurrencias de cada apellido
         total_count = sum(values)
         return [(key, total_count)]
 
 if __name__ == "__main__":
-    # Carga el CSV
     with open("./data/custom.csv", "r", encoding="utf-8") as file:
         text = file.read()
 
@@ -42,7 +39,3 @@ if __name__ == "__main__":
     print("-" * 30)
     for last_name, count in top_10_usa:
         print(f"{last_name}: {count}")
-
-    # Muestra la estructura HDFS y limpia
-    hybrid_mr._show_hdfs_structure()
-    hybrid_mr.cleanup_hdfs()
